@@ -21,12 +21,14 @@ const Index = () => {
       
       <motion.div style={{ opacity }} className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full bg-celestial-purple/20 blur-[100px] -z-10" />
       
-      <header className="absolute top-0 left-0 right-0 z-10 p-6">
-        <nav className="flex justify-between items-center max-w-7xl mx-auto">
+      <header className="fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-black/20">
+        <nav className="flex justify-between items-center max-w-7xl mx-auto p-4">
           <a href="#" className="font-playfair font-bold text-xl text-white">Astro-Poetry</a>
           <div className="space-x-6">
             <a href="#daily" className="text-celestial-softPurple hover:text-white transition-colors">Today's Poem</a>
             <a href="#archives" className="text-celestial-softPurple hover:text-white transition-colors">Archives</a>
+            <a href="#aditi" className="text-celestial-softPurple hover:text-white transition-colors">Aditi's Corner</a>
+            <a href="#community" className="text-celestial-softPurple hover:text-white transition-colors">Community</a>
             <a href="#submit" className="text-celestial-softPurple hover:text-white transition-colors">Submit</a>
           </div>
         </nav>

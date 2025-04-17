@@ -1,4 +1,3 @@
-
 import type { Config } from "tailwindcss";
 
 export default {
@@ -63,17 +62,19 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				},
-				// Custom celestial color palette
 				celestial: {
 					darkPurple: '#1A1F2C',
 					charcoal: '#221F26',
-					purple: '#9b87f5',
-					secondaryPurple: '#7E69AB',
-					tertiaryPurple: '#6E59A5',
-					lightPurple: '#D6BCFA',
-					softPurple: '#E5DEFF',
-					skyBlue: '#33C3F0',
-					brightBlue: '#1EAEDB',
+					purple: '#8B5CF6',
+					secondaryPurple: '#7C3AED',
+					tertiaryPurple: '#6D28D9',
+					lightPurple: '#C4B5FD',
+					softPurple: '#DDD6FE',
+					skyBlue: '#60A5FA',
+					brightBlue: '#3B82F6',
+					pink: '#EC4899',
+					indigo: '#6366F1',
+					cyan: '#06B6D4',
 				},
 			},
 			borderRadius: {
