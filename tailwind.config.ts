@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -61,7 +62,19 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
-				}
+				},
+				// Custom celestial color palette
+				celestial: {
+					darkPurple: '#1A1F2C',
+					charcoal: '#221F26',
+					purple: '#9b87f5',
+					secondaryPurple: '#7E69AB',
+					tertiaryPurple: '#6E59A5',
+					lightPurple: '#D6BCFA',
+					softPurple: '#E5DEFF',
+					skyBlue: '#33C3F0',
+					brightBlue: '#1EAEDB',
+				},
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
@@ -84,12 +97,37 @@ export default {
 					to: {
 						height: '0'
 					}
-				}
+				},
+				'twinkle': {
+					'0%, 100%': { opacity: '0.2' },
+					'50%': { opacity: '1' },
+				},
+				'float': {
+					'0%, 100%': { transform: 'translateY(0)' },
+					'50%': { transform: 'translateY(-10px)' },
+				},
+				'fadeIn': {
+					'0%': { opacity: '0' },
+					'100%': { opacity: '1' },
+				},
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
-			}
+				'accordion-up': 'accordion-up 0.2s ease-out',
+				'twinkle-slow': 'twinkle 4s ease-in-out infinite',
+				'twinkle-medium': 'twinkle 3s ease-in-out infinite',
+				'twinkle-fast': 'twinkle 2s ease-in-out infinite',
+				'float-slow': 'float 8s ease-in-out infinite',
+				'fadeIn': 'fadeIn 1s ease-out',
+			},
+			fontFamily: {
+				'playfair': ['"Playfair Display"', 'serif'],
+				'sans': ['Inter', 'sans-serif'],
+			},
+			backgroundImage: {
+				'cosmic-gradient': 'linear-gradient(to bottom, #1A1F2C, #403E43)',
+				'purple-gradient': 'linear-gradient(135deg, #9b87f5 0%, #6E59A5 100%)',
+			},
 		}
 	},
 	plugins: [require("tailwindcss-animate")],
