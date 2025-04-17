@@ -1,23 +1,12 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { useToast } from "@/hooks/use-toast";
+import { useAuth } from '@/contexts/AuthContext';
+import PoemSubmissionForm from './post/PoemSubmissionForm';
+import AuthForm from './auth/AuthForm';
 
 const PoemSubmission: React.FC = () => {
-  const { toast } = useToast();
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Form submission logic would go here
-    toast({
-      title: "Poem submitted!",
-      description: "Thank you for your contribution to Astro-Poetry Journal.",
-    });
-  };
+  const { user, loading } = useAuth();
 
   return (
     <section id="submit" className="py-16 px-6 relative">
@@ -43,70 +32,21 @@ const PoemSubmission: React.FC = () => {
           viewport={{ once: true }}
           transition={{ duration: 0.8 }}
         >
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="space-y-2">
-                <Label htmlFor="name">Your Name</Label>
-                <Input
-                  id="name"
-                  placeholder="Jane Doe"
-                  required
-                  className="bg-white/5 border-white/20"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="email">Email Address</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="jane@example.com"
-                  required
-                  className="bg-white/5 border-white/20"
-                />
-              </div>
+          {loading ? (
+            <div className="text-center py-8">
+              <div className="animate-pulse h-8 w-32 bg-white/10 rounded mx-auto mb-4"></div>
+              <div className="animate-pulse h-4 w-64 bg-white/10 rounded mx-auto"></div>
             </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="poem-title">Poem Title</Label>
-              <Input
-                id="poem-title"
-                placeholder="Enter the title of your poem"
-                required
-                className="bg-white/5 border-white/20"
-              />
+          ) : user ? (
+            <PoemSubmissionForm />
+          ) : (
+            <div>
+              <p className="text-center text-celestial-softPurple/80 mb-6">
+                Please sign in or create an account to submit your poem
+              </p>
+              <AuthForm />
             </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="astronomy-connection">
-                Astronomy Connection
-              </Label>
-              <Input
-                id="astronomy-connection" 
-                placeholder="What celestial event or astronomy fact inspired your poem?"
-                required
-                className="bg-white/5 border-white/20"
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="poem">Your Poem</Label>
-              <Textarea
-                id="poem"
-                placeholder="Share your poetry here..."
-                required
-                className="min-h-[150px] bg-white/5 border-white/20"
-              />
-            </div>
-
-            <div className="flex justify-end">
-              <Button 
-                type="submit"
-                className="bg-celestial-purple hover:bg-celestial-secondaryPurple px-6"
-              >
-                Submit Poem
-              </Button>
-            </div>
-          </form>
+          )}
         </motion.div>
       </div>
     </section>

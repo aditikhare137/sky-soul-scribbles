@@ -1,41 +1,93 @@
 
-import React, { useState } from 'react';
-import PoemCard from './PoemCard';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { useQuery } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { Calendar as CalendarIcon } from 'lucide-react';
+import { supabase, Post } from '@/lib/supabase';
+import PostCard from './post/PostCard';
+import { useAuth } from '@/contexts/AuthContext';
 
 const SkyArchives: React.FC = () => {
-  // This would be fetched from an API in a real implementation
-  const archiveData = [
-    {
-      date: new Date('2025-04-16'),
-      astronomyFact: "A partial lunar eclipse is visible across Asia and parts of Europe tonight. Approximately 35% of the Moon's surface will be covered by Earth's shadow.",
-      poemTitle: "Partial Shadow",
-      poemContent: "Moon wears a veil of Earth's curved shade,\nA crescent bite on silver plate.\nHalf-light speaks of borders made—\nNot wholly dark, not fully bright.\n\nSo too are we in partial light,\nEclipsed by doubts we cannot name.\nBut even shadows promise dawn,\nAnd wholeness after midnight's claim.",
-      author: "Marcus Chen"
-    },
-    {
-      date: new Date('2025-04-15'),
-      astronomyFact: "Mars and Jupiter appear within 0.5° of each other in the evening sky today, creating a striking conjunction visible to the naked eye. This celestial meetup happens near the bright star Antares.",
-      poemTitle: "Red Meets Giant",
-      poemContent: "Mars and Jupiter dance tonight,\nRed passion meets jovial light.\nRivals or lovers in starlit space—\nAmbition and wisdom in close embrace.\n\nAgainst velvet backdrop they converge,\nWarm ochre and amber verge.\nReminds us how opposites often need\nEach other's orbit to fully succeed.",
-      author: "Aria Nightshade"
-    },
-    {
-      date: new Date('2025-04-14'),
-      astronomyFact: "The Lyrid meteor shower has begun, increasing in activity before peaking on April 22. These meteors are fragments of Comet Thatcher, which orbits the sun once every 415 years.",
-      poemTitle: "April's Arrows",
-      poemContent: "Four centuries of silent flight,\nBefore returning to our sight.\nThatcher's children streak the sky—\nMomentary lines that swiftly die.\n\nWhat patience have these cosmic seeds,\nTo journey centuries before they bleed\nTheir light across our April view,\nReminding us how time burns too.",
-      author: "Julian Storey"
-    },
-  ];
-
   const [visibleCount, setVisibleCount] = useState(2);
+  const { user } = useAuth();
+  
+  const fetchPosts = async () => {
+    const { data, error } = await supabase
+      .from('posts')
+      .select(`
+        *,
+        profiles:author_id (
+          username,
+          avatar_url
+        )
+      `)
+      .order('created_at', { ascending: false })
+      .limit(10);
+      
+    if (error) throw error;
+    return data;
+  };
+  
+  const { data: posts, isLoading, error } = useQuery({
+    queryKey: ['archivePosts'],
+    queryFn: fetchPosts,
+  });
+
+  // Get user likes for the posts
+  const { data: userLikes } = useQuery({
+    queryKey: ['userLikes', user?.id],
+    queryFn: async () => {
+      if (!user) return [];
+      const { data, error } = await supabase
+        .from('likes')
+        .select('post_id')
+        .eq('user_id', user.id);
+        
+      if (error) throw error;
+      return data.map(like => like.post_id);
+    },
+    enabled: !!user,
+  });
   
   const loadMore = () => {
-    setVisibleCount(prev => Math.min(prev + 2, archiveData.length));
+    setVisibleCount(prev => Math.min(prev + 2, posts?.length || 0));
   };
+
+  // Placeholder data for empty state
+  const placeholderData = [
+    {
+      id: "placeholder-1",
+      created_at: new Date().toISOString(),
+      title: "The Moon's Whisper",
+      astro_fact: "The Moon is slowly moving away from Earth at a rate of about 3.8 centimeters per year.",
+      poem_text: "Silver guardian in night's embrace,\nSlowly drifting through starry space.\nA silent reminder of time's vast flow,\nWith each year, another inch you go.",
+      author_id: "system",
+      likes_count: 0,
+      reposts_count: 0,
+      profiles: {
+        username: "Astro-Poetry",
+        avatar_url: null
+      }
+    },
+    {
+      id: "placeholder-2",
+      created_at: new Date(Date.now() - 86400000).toISOString(), // Yesterday
+      title: "Stellar Nursery",
+      astro_fact: "The Orion Nebula is one of the brightest nebulae in the sky and is visible to the naked eye. It's a stellar nursery where new stars are being born.",
+      poem_text: "Cosmic cradle of stellar birth,\nWhere infant suns ignite with mirth.\nGaseous clouds in beauty curled,\nDreaming of planets, moons, and worlds.",
+      author_id: "system",
+      likes_count: 0,
+      reposts_count: 0,
+      profiles: {
+        username: "Astro-Poetry",
+        avatar_url: null
+      }
+    }
+  ];
+
+  const displayPosts = posts?.length ? posts : placeholderData;
+  const isUserLiked = (postId: string) => userLikes?.includes(postId) || false;
 
   return (
     <section id="archives" className="py-16 px-6 relative">
@@ -61,20 +113,36 @@ const SkyArchives: React.FC = () => {
           </div>
         </motion.div>
         
-        <div className="space-y-8">
-          {archiveData.slice(0, visibleCount).map((poem, index) => (
-            <PoemCard
-              key={index}
-              date={poem.date}
-              astronomyFact={poem.astronomyFact}
-              poemTitle={poem.poemTitle}
-              poemContent={poem.poemContent}
-              author={poem.author}
-            />
-          ))}
-        </div>
+        {isLoading ? (
+          <div className="space-y-8">
+            {[1, 2].map(i => (
+              <div key={i} className="glass rounded-lg overflow-hidden animate-pulse">
+                <div className="p-6">
+                  <div className="h-4 bg-white/10 rounded w-1/4 mb-4"></div>
+                  <div className="h-6 bg-white/10 rounded w-1/2 mb-4"></div>
+                  <div className="h-4 bg-white/10 rounded w-full mb-2"></div>
+                  <div className="h-4 bg-white/10 rounded w-full"></div>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : error ? (
+          <div className="text-center py-8">
+            <p className="text-red-400">Error loading archive posts. Please try again later.</p>
+          </div>
+        ) : (
+          <div className="space-y-8">
+            {displayPosts.slice(0, visibleCount).map((post: any) => (
+              <PostCard
+                key={post.id}
+                post={post}
+                isUserLiked={isUserLiked(post.id)}
+              />
+            ))}
+          </div>
+        )}
         
-        {visibleCount < archiveData.length && (
+        {visibleCount < displayPosts.length && (
           <div className="flex justify-center mt-10">
             <Button
               onClick={loadMore}
