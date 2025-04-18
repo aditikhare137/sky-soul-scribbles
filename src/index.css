@@ -7,44 +7,35 @@
 
 @layer base {
   :root {
-    --background: 240 10% 3.9%;
-    --foreground: 0 0% 98%;
+    --background: 231 59% 11%;
+    --foreground: 60 30% 96%;
 
-    --card: 240 10% 3.9%;
-    --card-foreground: 0 0% 98%;
+    --card: 231 59% 11%;
+    --card-foreground: 60 30% 96%;
 
-    --popover: 240 10% 3.9%;
-    --popover-foreground: 0 0% 98%;
+    --popover: 231 59% 11%;
+    --popover-foreground: 60 30% 96%;
 
-    --primary: 0 0% 98%;
-    --primary-foreground: 240 5.9% 10%;
+    --primary: 246 78% 64%;
+    --primary-foreground: 60 30% 96%;
 
-    --secondary: 240 3.7% 15.9%;
-    --secondary-foreground: 0 0% 98%;
+    --secondary: 204 100% 73%;
+    --secondary-foreground: 231 59% 11%;
 
-    --muted: 240 3.7% 15.9%;
-    --muted-foreground: 240 5% 64.9%;
+    --muted: 215 25% 27%;
+    --muted-foreground: 217 9% 73%;
 
-    --accent: 240 3.7% 15.9%;
-    --accent-foreground: 0 0% 98%;
+    --accent: 204 100% 73%;
+    --accent-foreground: 231 59% 11%;
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
+    --destructive: 349 89% 71%;
+    --destructive-foreground: 60 30% 96%;
 
-    --border: 240 3.7% 15.9%;
-    --input: 240 3.7% 15.9%;
-    --ring: 240 4.9% 83.9%;
+    --border: 215 25% 27%;
+    --input: 215 25% 27%;
+    --ring: 246 78% 64%;
 
     --radius: 0.75rem;
-    
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 240 5.9% 10%;
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 240 4.8% 95.9%;
-    --sidebar-accent-foreground: 240 5.9% 10%;
-    --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
   }
 
   * {
@@ -52,8 +43,8 @@
   }
   
   body {
-    @apply bg-celestial-darkPurple text-foreground antialiased overflow-x-hidden;
-    background: linear-gradient(135deg, #1A1F2C 0%, #403E43 100%);
+    @apply bg-celestial-darkPurple text-[#F8F8F2] antialiased overflow-x-hidden;
+    background: linear-gradient(135deg, #0B0F2B 0%, #1A1F2C 100%);
     min-height: 100vh;
   }
 
@@ -64,7 +55,7 @@
 
 @layer utilities {
   .glass {
-    @apply backdrop-blur-xl bg-white/10 border border-white/10 shadow-[0_4px_12px_-2px_rgba(0,0,0,0.3)];
+    @apply backdrop-blur-xl bg-[rgba(22,28,49,0.7)] border border-white/10 shadow-[0_4px_12px_-2px_rgba(0,0,0,0.3)];
   }
   
   .text-gradient {

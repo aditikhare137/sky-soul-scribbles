@@ -63,18 +63,18 @@ export default {
 					ring: 'hsl(var(--sidebar-ring))'
 				},
 				celestial: {
-					darkPurple: '#1A1F2C',
-					charcoal: '#221F26',
-					purple: '#8B5CF6',
-					secondaryPurple: '#7C3AED',
-					tertiaryPurple: '#6D28D9',
-					lightPurple: '#C4B5FD',
-					softPurple: '#DDD6FE',
-					skyBlue: '#60A5FA',
-					brightBlue: '#3B82F6',
-					pink: '#EC4899',
-					indigo: '#6366F1',
-					cyan: '#06B6D4',
+					darkPurple: '#0B0F2B', // Midnight Indigo
+					charcoal: '#1A1F2C',
+					purple: '#6C5CE7', // Star Purple
+					secondaryPurple: '#5849c4',
+					tertiaryPurple: '#4a3da3',
+					lightPurple: '#74b9ff', // Nebula Blue
+					softPurple: '#B2BEC3', // Soft Grey
+					skyBlue: '#74b9ff', // Nebula Blue
+					brightBlue: '#5facff',
+					pink: '#FF6B81', // Galactic Pink
+					indigo: '#0B0F2B', // Midnight Indigo
+					cyan: '#74b9ff', // Nebula Blue
 				},
 			},
 			borderRadius: {
