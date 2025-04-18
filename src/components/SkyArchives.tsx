@@ -1,5 +1,4 @@
-
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useQuery } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
@@ -26,7 +25,7 @@ const SkyArchives: React.FC = () => {
       .from('posts')
       .select(`
         *,
-        profiles(
+        profiles (
           username,
           avatar_url
         )
@@ -43,7 +42,6 @@ const SkyArchives: React.FC = () => {
     queryFn: fetchPosts,
   });
 
-  // Get user likes for the posts
   const { data: userLikes } = useQuery({
     queryKey: ['userLikes', user?.id],
     queryFn: async () => {
@@ -63,7 +61,6 @@ const SkyArchives: React.FC = () => {
     setVisibleCount(prev => Math.min(prev + 2, posts?.length || 0));
   };
 
-  // Placeholder data for empty state
   const placeholderData = [
     {
       id: "placeholder-1",
