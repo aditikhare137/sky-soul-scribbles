@@ -1,23 +1,10 @@
 
 import { createClient } from '@supabase/supabase-js';
 
-// Get environment variables with fallbacks
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-
-// Check if the URL is missing and provide a more helpful error
-if (!supabaseUrl) {
-  console.error('Supabase URL is missing! Make sure to set the VITE_SUPABASE_URL environment variable.');
-}
-
-if (!supabaseAnonKey) {
-  console.error('Supabase Anon Key is missing! Make sure to set the VITE_SUPABASE_ANON_KEY environment variable.');
-}
-
-// Only create the client if both URL and anon key are available
-export const supabase = supabaseUrl && supabaseAnonKey 
-  ? createClient(supabaseUrl, supabaseAnonKey)
-  : null;
+export const supabase = createClient(
+  "https://igndnzvlhtziaoqumsnt.supabase.co",
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlnbmRuenZsaHR6aWFvcXVtc250Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ5MTM1ODAsImV4cCI6MjA2MDQ4OTU4MH0.61RtwLNhvsDEt6SYyl4XHOnuLthNB9h1apilQQPQOlM"
+);
 
 // Types for our database
 export type Profile = {
@@ -36,6 +23,10 @@ export type Post = {
   author_id: string;
   likes_count: number;
   reposts_count: number;
+  profiles?: {
+    username: string | null;
+    avatar_url: string | null;
+  };
 };
 
 export type Like = {
