@@ -26,7 +26,7 @@ const PostDetail = () => {
           .from('posts')
           .select(`
             *,
-            profiles:author_id (
+            profiles(
               username,
               avatar_url
             )

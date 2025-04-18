@@ -7,6 +7,15 @@ import { Calendar as CalendarIcon } from 'lucide-react';
 import { supabase, Post } from '@/lib/supabase';
 import PostCard from './post/PostCard';
 import { useAuth } from '@/contexts/AuthContext';
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 
 const SkyArchives: React.FC = () => {
   const [visibleCount, setVisibleCount] = useState(2);
@@ -17,7 +26,7 @@ const SkyArchives: React.FC = () => {
       .from('posts')
       .select(`
         *,
-        profiles:author_id (
+        profiles(
           username,
           avatar_url
         )
@@ -129,6 +138,7 @@ const SkyArchives: React.FC = () => {
         ) : error ? (
           <div className="text-center py-8">
             <p className="text-red-400">Error loading archive posts. Please try again later.</p>
+            <p className="text-sm text-red-300 mt-2">{(error as Error).message}</p>
           </div>
         ) : (
           <div className="space-y-8">
