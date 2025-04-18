@@ -9,7 +9,7 @@ import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import PostDetail from "./pages/PostDetail";
 import { useState, useEffect } from "react";
-import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { supabase } from "./lib/supabase";
 
 const queryClient = new QueryClient({
@@ -27,13 +27,13 @@ const App = () => {
 
   // Check if Supabase is configured correctly
   useEffect(() => {
+    if (!supabase) {
+      setSupabaseError("Supabase client could not be initialized. Please check your environment variables.");
+      return;
+    }
+
     const checkSupabaseConnection = async () => {
       try {
-        if (!import.meta.env.VITE_SUPABASE_URL || !import.meta.env.VITE_SUPABASE_ANON_KEY) {
-          setSupabaseError("Supabase URL or Anon Key is missing. Please check your environment variables.");
-          return;
-        }
-        
         // A simple test query to verify the connection
         await supabase.from('posts').select('id').limit(1);
         // If no error is thrown, connection is successful
@@ -52,11 +52,12 @@ const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
-        {supabaseError ? (
+        {supabaseError || !supabase ? (
           <div className="p-4">
             <Alert variant="destructive">
+              <AlertTitle>Supabase Connection Error</AlertTitle>
               <AlertDescription>
-                {supabaseError}
+                {supabaseError || "Supabase client could not be initialized."}
                 <p className="mt-2 text-sm">
                   Make sure you've set up Supabase correctly and added your VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY
                   in the Lovable Supabase integration settings.
