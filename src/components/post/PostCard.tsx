@@ -1,13 +1,11 @@
 
 import React, { useState } from 'react';
-import { format } from 'date-fns';
 import { motion } from 'framer-motion';
-import { Heart, Share2, Repeat2 } from 'lucide-react';
-import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import { supabase, Post as PostType, Like } from '@/lib/supabase';
-import { useAuth } from '@/contexts/AuthContext';
-import UserAvatar from '../auth/UserAvatar';
+import { supabase, Post as PostType } from '@/lib/supabase';
+import PostMetadata from './PostMetadata';
+import PostActions from './PostActions';
+import PoemContent from './PoemContent';
 import RepostModal from './RepostModal';
 
 interface PostCardProps {
@@ -29,27 +27,17 @@ const PostCard: React.FC<PostCardProps> = ({
   isDetail = false
 }) => {
   const { toast } = useToast();
-  const { user } = useAuth();
   const [liked, setLiked] = useState(isUserLiked);
   const [likesCount, setLikesCount] = useState(post.likes_count);
   const [repostModalOpen, setRepostModalOpen] = useState(false);
 
   const handleLike = async () => {
-    if (!user) {
-      toast({
-        title: "Authentication required",
-        description: "Please sign in to like posts",
-      });
-      return;
-    }
-
     try {
       if (liked) {
-        // Unlike post
         const { error } = await supabase
           .from('likes')
           .delete()
-          .eq('user_id', user.id)
+          .eq('user_id', post.author_id)
           .eq('post_id', post.id);
 
         if (error) throw error;
@@ -62,11 +50,10 @@ const PostCard: React.FC<PostCardProps> = ({
           description: "You've removed your like from this post",
         });
       } else {
-        // Like post
         const { error } = await supabase
           .from('likes')
           .insert([
-            { user_id: user.id, post_id: post.id }
+            { user_id: post.author_id, post_id: post.id }
           ]);
 
         if (error) throw error;
@@ -102,12 +89,10 @@ const PostCard: React.FC<PostCardProps> = ({
           title: "Shared successfully!",
         });
       })
-      .catch((error) => {
-        // Copy to clipboard instead
+      .catch(() => {
         copyToClipboard(url);
       });
     } else {
-      // Fallback to clipboard
       copyToClipboard(url);
     }
   };
@@ -139,69 +124,33 @@ const PostCard: React.FC<PostCardProps> = ({
         transition={{ duration: 0.8 }}
       >
         <div className={`p-6 md:p-8 ${featured ? 'md:w-1/2' : ''} border-b md:border-b-0 ${featured ? 'md:border-r' : ''} border-white/10`}>
-          <div className="flex justify-between items-center mb-4">
-            <div className="text-celestial-softPurple text-sm">
-              {format(new Date(post.created_at), 'MMMM d, yyyy')}
-            </div>
-            {post.profiles && (
-              <div className="flex items-center">
-                <UserAvatar profile={{
-                  id: post.author_id,
-                  username: post.profiles.username,
-                  avatar_url: post.profiles.avatar_url,
-                  created_at: '',
-                }} size="sm" />
-                <span className="ml-2 text-sm text-celestial-softPurple">
-                  {post.profiles.username || 'Anonymous'}
-                </span>
-              </div>
-            )}
-          </div>
+          <PostMetadata 
+            createdAt={post.created_at}
+            author={{
+              id: post.author_id,
+              username: post.profiles?.username || null,
+              avatar_url: post.profiles?.avatar_url || null
+            }}
+          />
           <h3 className="text-xl font-medium mb-4 text-celestial-skyBlue">Astronomy Fact</h3>
           <p className="text-gray-300">{post.astro_fact}</p>
         </div>
         
         <div className={`p-6 md:p-8 ${featured ? 'md:w-1/2' : ''}`}>
-          <h3 className="font-playfair text-2xl text-celestial-purple mb-2">{post.title}</h3>
-          <div className="mt-4 mb-6">
-            {post.poem_text.split('\n').map((line, i) => (
-              <p key={i} className={`${line === '' ? 'h-4' : ''} font-playfair text-gray-200 italic leading-relaxed`}>
-                {line}
-              </p>
-            ))}
-          </div>
+          <PoemContent 
+            title={post.title}
+            poemText={post.poem_text}
+          />
           
           {!isDetail && (
-            <div className="flex justify-end mt-4 space-x-4">
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                className={`flex items-center gap-1 ${liked ? 'text-red-400' : 'text-celestial-softPurple'} hover:text-red-400`}
-                onClick={handleLike}
-              >
-                <Heart className={liked ? 'fill-current' : ''} size={18} />
-                <span>{likesCount}</span>
-              </Button>
-              
-              <Button
-                variant="ghost"
-                size="sm"
-                className="flex items-center gap-1 text-celestial-softPurple hover:text-celestial-skyBlue"
-                onClick={handleShare}
-              >
-                <Share2 size={18} />
-              </Button>
-              
-              <Button
-                variant="ghost"
-                size="sm"
-                className="flex items-center gap-1 text-celestial-softPurple hover:text-celestial-purple"
-                onClick={() => setRepostModalOpen(true)}
-              >
-                <Repeat2 size={18} />
-                <span>{post.reposts_count || 0}</span>
-              </Button>
-            </div>
+            <PostActions
+              liked={liked}
+              likesCount={likesCount}
+              repostsCount={post.reposts_count}
+              onLike={handleLike}
+              onShare={handleShare}
+              onRepost={() => setRepostModalOpen(true)}
+            />
           )}
         </div>
       </motion.div>
