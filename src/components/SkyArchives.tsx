@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useQuery } from '@tanstack/react-query';
@@ -6,6 +7,7 @@ import { Calendar as CalendarIcon } from 'lucide-react';
 import { supabase, Post } from '@/lib/supabase';
 import PostCard from './post/PostCard';
 import { useAuth } from '@/contexts/AuthContext';
+import { useToast } from "@/hooks/use-toast";
 import {
   Pagination,
   PaginationContent,
@@ -19,22 +21,51 @@ import {
 const SkyArchives: React.FC = () => {
   const [visibleCount, setVisibleCount] = useState(2);
   const { user } = useAuth();
+  const { toast } = useToast();
   
   const fetchPosts = async () => {
-    const { data, error } = await supabase
-      .from('posts')
-      .select(`
-        *,
-        profiles (
-          username,
-          avatar_url
-        )
-      `)
-      .order('created_at', { ascending: false })
-      .limit(10);
+    try {
+      // First, get posts data
+      const { data: postsData, error: postsError } = await supabase
+        .from('posts')
+        .select('*')
+        .order('created_at', { ascending: false })
+        .limit(10);
       
-    if (error) throw error;
-    return data;
+      if (postsError) {
+        throw postsError;
+      }
+      
+      if (!postsData || postsData.length === 0) {
+        return [];
+      }
+      
+      // Now, get author profiles for each post
+      const postWithProfiles = await Promise.all(
+        postsData.map(async (post) => {
+          const { data: profileData, error: profileError } = await supabase
+            .from('profiles')
+            .select('username, avatar_url')
+            .eq('id', post.author_id)
+            .single();
+          
+          return {
+            ...post,
+            profiles: profileError ? null : profileData,
+          };
+        })
+      );
+      
+      return postWithProfiles;
+    } catch (error: any) {
+      console.error('Error fetching posts:', error);
+      toast({
+        title: "Error loading posts",
+        description: error.message || "Could not load posts. Please try again.",
+        variant: "destructive",
+      });
+      return [];
+    }
   };
   
   const { data: posts, isLoading, error } = useQuery({
@@ -46,13 +77,18 @@ const SkyArchives: React.FC = () => {
     queryKey: ['userLikes', user?.id],
     queryFn: async () => {
       if (!user) return [];
-      const { data, error } = await supabase
-        .from('likes')
-        .select('post_id')
-        .eq('user_id', user.id);
-        
-      if (error) throw error;
-      return data.map(like => like.post_id);
+      try {
+        const { data, error } = await supabase
+          .from('likes')
+          .select('post_id')
+          .eq('user_id', user.id);
+          
+        if (error) throw error;
+        return data.map(like => like.post_id);
+      } catch (error) {
+        console.error('Error fetching user likes:', error);
+        return [];
+      }
     },
     enabled: !!user,
   });

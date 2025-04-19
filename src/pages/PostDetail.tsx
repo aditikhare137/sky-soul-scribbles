@@ -22,21 +22,31 @@ const PostDetail = () => {
       if (!id) return;
       
       try {
-        const { data, error } = await supabase
+        // First, get the post data
+        const { data: postData, error: postError } = await supabase
           .from('posts')
-          .select(`
-            *,
-            profiles (
-              username,
-              avatar_url
-            )
-          `)
+          .select('*')
           .eq('id', id)
           .single();
           
-        if (error) throw error;
+        if (postError) throw postError;
         
-        setPost(data);
+        // Then, get the author profile
+        const { data: profileData, error: profileError } = await supabase
+          .from('profiles')
+          .select('username, avatar_url')
+          .eq('id', postData.author_id)
+          .single();
+        
+        if (profileError) {
+          console.warn("Could not fetch author profile:", profileError);
+        }
+        
+        // Combine post data with profile
+        setPost({
+          ...postData,
+          profiles: profileError ? null : profileData
+        });
         
         // Check if the current user has liked the post
         if (user) {
