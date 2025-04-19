@@ -23,6 +23,7 @@ export type Post = {
   author_id: string;
   likes_count: number;
   reposts_count: number;
+  comments_count: number;
   profiles?: {
     username: string | null;
     avatar_url: string | null;

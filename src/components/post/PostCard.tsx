@@ -6,7 +6,7 @@ import PostMetadata from './PostMetadata';
 import PostActions from './PostActions';
 import PoemContent from './PoemContent';
 import RepostModal from './RepostModal';
-import Comments from './Comments';
+import Comments from '../comments/Comments';
 
 interface PostCardProps {
   post: PostType & { 
@@ -149,10 +149,11 @@ const PostCard: React.FC<PostCardProps> = ({
               liked={liked}
               likesCount={likesCount}
               repostsCount={post.reposts_count}
-              commentsCount={post.comments_count}
+              commentsCount={post.comments_count || 0}
               onLike={handleLike}
               onShare={handleShare}
               onRepost={() => setRepostModalOpen(true)}
+              postId={post.id}
             />
           )}
         </div>

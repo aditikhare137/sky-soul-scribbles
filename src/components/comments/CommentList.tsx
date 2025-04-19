@@ -63,7 +63,12 @@ const CommentList: React.FC<CommentListProps> = ({ comments }) => {
           <div className="flex items-start justify-between">
             <div className="flex items-center gap-3">
               <UserAvatar 
-                profile={comment.profiles} 
+                profile={{
+                  id: comment.user_id,
+                  username: comment.profiles?.username || null,
+                  avatar_url: comment.profiles?.avatar_url || null,
+                  created_at: comment.created_at
+                }}
                 size="sm"
               />
               <div>
