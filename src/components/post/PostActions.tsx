@@ -1,26 +1,31 @@
 
 import React from 'react';
-import { Heart, Share2, Repeat2 } from 'lucide-react';
+import { Heart, Share2, Repeat2, MessageSquare } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from '@/contexts/AuthContext';
+import { Link } from 'react-router-dom';
 
 interface PostActionsProps {
   liked: boolean;
   likesCount: number;
   repostsCount: number;
+  commentsCount: number;
   onLike: () => Promise<void>;
   onShare: () => void;
   onRepost: () => void;
+  postId?: string;
 }
 
 const PostActions: React.FC<PostActionsProps> = ({
   liked,
   likesCount,
   repostsCount,
+  commentsCount,
   onLike,
   onShare,
   onRepost,
+  postId
 }) => {
   const { toast } = useToast();
   const { user } = useAuth();
@@ -47,6 +52,28 @@ const PostActions: React.FC<PostActionsProps> = ({
         <Heart className={liked ? 'fill-current' : ''} size={18} />
         <span>{likesCount}</span>
       </Button>
+      
+      {postId ? (
+        <Link to={`/post/${postId}#comments`}>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="flex items-center gap-1 text-celestial-softPurple hover:text-celestial-purple"
+          >
+            <MessageSquare size={18} />
+            <span>{commentsCount}</span>
+          </Button>
+        </Link>
+      ) : (
+        <Button
+          variant="ghost"
+          size="sm"
+          className="flex items-center gap-1 text-celestial-softPurple hover:text-celestial-purple"
+        >
+          <MessageSquare size={18} />
+          <span>{commentsCount}</span>
+        </Button>
+      )}
       
       <Button
         variant="ghost"

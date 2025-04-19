@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useToast } from "@/hooks/use-toast";
@@ -7,6 +6,7 @@ import PostMetadata from './PostMetadata';
 import PostActions from './PostActions';
 import PoemContent from './PoemContent';
 import RepostModal from './RepostModal';
+import Comments from './Comments';
 
 interface PostCardProps {
   post: PostType & { 
@@ -142,11 +142,14 @@ const PostCard: React.FC<PostCardProps> = ({
             poemText={post.poem_text}
           />
           
-          {!isDetail && (
+          {isDetail ? (
+            <Comments postId={post.id} />
+          ) : (
             <PostActions
               liked={liked}
               likesCount={likesCount}
               repostsCount={post.reposts_count}
+              commentsCount={post.comments_count}
               onLike={handleLike}
               onShare={handleShare}
               onRepost={() => setRepostModalOpen(true)}

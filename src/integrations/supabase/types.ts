@@ -9,6 +9,38 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      comments: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          post_id: string
+          user_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          id?: string
+          post_id: string
+          user_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          post_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "comments_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "posts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       likes: {
         Row: {
           created_at: string
@@ -42,6 +74,7 @@ export type Database = {
         Row: {
           astro_fact: string
           author_id: string
+          comments_count: number
           created_at: string
           id: string
           likes_count: number
@@ -52,6 +85,7 @@ export type Database = {
         Insert: {
           astro_fact: string
           author_id: string
+          comments_count?: number
           created_at?: string
           id?: string
           likes_count?: number
@@ -62,6 +96,7 @@ export type Database = {
         Update: {
           astro_fact?: string
           author_id?: string
+          comments_count?: number
           created_at?: string
           id?: string
           likes_count?: number
