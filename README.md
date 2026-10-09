@@ -1,73 +1,69 @@
-# Welcome to your Lovable project
+# Sky Soul Scribbles
 
-## Project info
+Sky Soul Scribbles is a web application for browsing and viewing written posts. The codebase includes a React front end, authentication context, post detail routes, and a Supabase integration for post data.
 
-**URL**: https://lovable.dev/projects/b82eb684-aa42-4d96-b615-58b2b04c4bb7
+## Features and Structure
 
-## How can I edit this code?
+- **Home page:** entry point for browsing posts
+- **Post detail route:** displays a post using its ID
+- **Authentication page and context:** separates authentication-related UI and state
+- **Supabase integration:** connects the app to a `posts` data source
+- **Client-side routing:** uses React Router for page navigation
+- **UI feedback:** toast notifications, tooltips, and connection-error messaging
 
-There are several ways of editing your application.
+## Tech Stack
 
-**Use Lovable**
+- React 18
+- TypeScript
+- Vite
+- Tailwind CSS
+- shadcn/ui and Radix UI components
+- Supabase
+- React Router
+- TanStack Query
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/b82eb684-aa42-4d96-b615-58b2b04c4bb7) and start prompting.
+## Run Locally
 
-Changes made via Lovable will be committed automatically to this repo.
+### Prerequisites
 
-**Use your preferred IDE**
+- Node.js and npm
+- Supabase project credentials configured for the application
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### Setup
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
+```bash
+git clone https://github.com/aditikhare137/sky-soul-scribbles.git
+cd sky-soul-scribbles
+npm install
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+Use the local URL printed by Vite to open the app.
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+## Supabase Configuration
 
-**Use GitHub Codespaces**
+The app expects the Supabase URL and anonymous key to be configured through the project's environment/integration settings. In a local environment, configure the corresponding Vite variables securely (for example, `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY`) before running the application. Do not commit secrets to GitHub.
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+The app checks the Supabase connection and displays a configuration error if the client cannot be initialized.
 
-## What technologies are used for this project?
+## Useful Commands
 
-This project is built with:
+```bash
+npm run dev
+npm run build
+npm run lint
+npm run preview
+```
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+## Repository Layout
 
-## How can I deploy this project?
+- `src/pages/` — home, authentication, post detail, and not-found pages
+- `src/contexts/` — authentication context
+- `src/integrations/` and `src/lib/` — service integration and shared utilities
+- `src/components/` — reusable UI components
+- `supabase/` — Supabase configuration
+- `public/` — static assets
 
-Simply open [Lovable](https://lovable.dev/projects/b82eb684-aa42-4d96-b615-58b2b04c4bb7) and click on Share -> Publish.
+## Author
 
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+Aditi Khare
